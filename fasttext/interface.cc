@@ -120,48 +120,6 @@ std::vector<real> FastTextModel::getVectorWrapper(std::string word)
     return vector;
 }
 
-std::vector<double> FastTextModel::classifierTest(std::string filename,
-        int32_t k)
-{
-    int32_t nexamples = 0;
-    int32_t nlabels = 0;
-    double precision = 0.0;
-    std::vector<int32_t> line;
-    std::vector<int32_t> labels;
-    std::ifstream ifs(filename);
-    if(!ifs.is_open()) {
-        std::cerr << "interface.cc: Test file cannot be opened!" << std::endl;
-        exit(EXIT_FAILURE);
-    }
-
-    while (ifs.peek() != EOF) {
-        _dict->getLine(ifs, line, labels, _model->rng);
-        _dict->addNgrams(line, wordNgrams);
-        if(labels.size() > 0 && line.size() > 0) {
-            std::vector<std::pair<real, int32_t>> predictions;
-            _model->predict(line, k, predictions);
-            for(auto it = predictions.cbegin(); it != predictions.cend();
-                    it++) {
-                int32_t i = it->second;
-                if(std::find(labels.begin(), labels.end(), i)
-                        != labels.end()) {
-                    precision += 1.0;
-                }
-            }
-            nexamples++;
-            nlabels += labels.size();
-        }
-    }
-
-    ifs.close();
-    std::setprecision(3);
-    std::vector<double> result;
-    result.push_back(precision/(k * nexamples));
-    result.push_back(precision/nlabels);
-    result.push_back((double)nexamples);
-    return result;
-}
-
 std::vector<std::string> FastTextModel::classifierPredict(std::string text,
         int32_t k)
 {
@@ -257,28 +215,6 @@ class basic_nullbuf: public std::basic_streambuf<cT, traits> {
         return traits::not_eof(c); // indicate success
     }
 };
-
-void trainWrapper(int argc, char **argv, int silent)
-{
-    /* if silent > 0, the log from train() function will be supressed */
-    if(silent > 0) {
-        /* output file stream to redirect output from fastText library */
-        std::streambuf* old_ofs = std::cout.rdbuf();
-        std::streambuf* null_ofs = new basic_nullbuf<char>();
-        std::cout.rdbuf(null_ofs);
-        std::shared_ptr<Args> a = std::make_shared<Args>();
-        a->parseArgs(argc, argv);
-        FastText fasttext;
-        fasttext.train(a);
-        std::cout.rdbuf(old_ofs);
-        delete null_ofs;
-    } else {
-        std::shared_ptr<Args> a = std::make_shared<Args>();
-        a->parseArgs(argc, argv);
-        FastText fasttext;
-        fasttext.train(a);
-    }
-}
 
 /* The logic is the same as FastText::loadModel, we roll our own
  * to be able to access data from args, dictionary etc since this

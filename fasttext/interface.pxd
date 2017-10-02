@@ -40,7 +40,6 @@ cdef extern from "interface.h":
 
         vector[string] getWords()
         vector[real] getVectorWrapper(string word)
-        vector[double] classifierTest(string filename, int32_t k)
         vector[string] classifierPredict(string text, int32_t k)
         vector[vector[string]] classifierPredictProb(string text, int32_t k)
 
@@ -49,8 +48,6 @@ cdef extern from "interface.h":
         string dictGetWord(int32_t i)
         int32_t dictGetNLabels()
         string dictGetLabel(int32_t i)
-
-    void trainWrapper(int argc, char **argvm, int silent)
 
     # Add 'except +' to the function declaration to let Cython safely raise an
     # appropriate Python exception instead

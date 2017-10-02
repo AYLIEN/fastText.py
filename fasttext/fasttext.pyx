@@ -9,9 +9,7 @@ from libcpp.vector cimport vector
 
 # Python module
 import os
-from model import WordVectorModel
 from model import SupervisedModel
-from model import ClassifierTestResult as CTRes
 from builtins import bytes
 
 # This class wrap C++ class FastTextModel, so it can be accessed via Python
@@ -146,14 +144,7 @@ def load_model(filename, label_prefix='', encoding='utf-8'):
                 ' due to C++ extension failed to allocate the memory')
 
     model_name = model.fm.modelName
-    if model_name == 'skipgram' or model_name == 'cbow':
-        words = []
-        # We build the dictionary here to support unicode characters
-        for i in xrange(model.dict_nwords()):
-            word = model.dict_get_word(i, encoding)
-            words.append(word)
-        return WordVectorModel(model, words, encoding)
-    elif model_name == 'supervised':
+    if model_name == 'supervised':
         labels = []
         for i in xrange(model.dict_nlabels()):
             label = model.dict_get_label(i, encoding)

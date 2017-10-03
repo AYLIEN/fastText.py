@@ -13,6 +13,7 @@
 #include <istream>
 #include <ostream>
 #include <string>
+#include <vector>
 
 namespace fasttext {
 
@@ -20,6 +21,9 @@ enum class model_name : int {cbow=1, sg, sup};
 enum class loss_name : int {hs=1, ns, softmax};
 
 class Args {
+  private:
+    std::string lossToString(loss_name);
+
   public:
     Args();
     std::string input;
@@ -44,9 +48,20 @@ class Args {
     std::string label;
     int verbose;
     std::string pretrainedVectors;
+    int saveOutput;
 
-    void parseArgs(int, char**);
+    bool qout;
+    bool retrain;
+    bool qnorm;
+    size_t cutoff;
+    size_t dsub;
+
+    void parseArgs(const std::vector<std::string>& args);
     void printHelp();
+    void printBasicHelp();
+    void printDictionaryHelp();
+    void printTrainingHelp();
+    void printQuantizationHelp();
     void save(std::ostream&);
     void load(std::istream&);
 };

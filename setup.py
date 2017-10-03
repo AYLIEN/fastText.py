@@ -22,7 +22,9 @@ extensions = [
             'fasttext/cpp/src/utils.cc',
             'fasttext/cpp/src/fasttext.cc',
             'fasttext/cpp/src/vector.cc',
-            'fasttext/cpp/src/main.cc'
+            'fasttext/cpp/src/main.cc',
+            'fasttext/cpp/src/qmatrix.cc',
+            'fasttext/cpp/src/productquantizer.cc'
         ],
         language='c++',
         extra_compile_args=extra_compile_args)

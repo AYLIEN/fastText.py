@@ -19,12 +19,6 @@ cdef class FastTextModelWrapper:
     def __cinit__(self):
         self.fm = FastTextModel()
 
-    # dict_* methods is a wrapper for the Dictionary class methods;
-    # We can't access dicrectly Dictionary in python because
-    # Dictionary class doesn't have a nullary constructor
-    def dict_nwords(self):
-        return self.fm.dictGetNWords()
-
     def dict_get_word(self, i, encoding):
         cdef string cpp_string
         cpp_string = self.fm.dictGetWord(i)

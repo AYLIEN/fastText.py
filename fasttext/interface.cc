@@ -70,14 +70,6 @@ void FastTextModel::setModel(std::shared_ptr<Model> model)
     _model = model;
 }
 
-/* Methods to wrap the Dictionary methods; since we can't access
- * dicrectly Dictionary in python because Dictionary doesn't have
- * nullary constructor */
-int32_t FastTextModel::dictGetNWords()
-{
-    return _dict->nwords();
-}
-
 std::string FastTextModel::dictGetWord(int32_t i)
 {
     return _dict->getWord(i);

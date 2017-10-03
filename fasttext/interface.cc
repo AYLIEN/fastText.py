@@ -19,16 +19,6 @@
 
 FastTextModel::FastTextModel(){}
 
-std::vector<std::string> FastTextModel::getWords()
-{
-    return _words;
-}
-
-void FastTextModel::addWord(std::string word)
-{
-    _words.push_back(word);
-}
-
 void FastTextModel::setArgs(std::shared_ptr<Args> args)
 {
     dim = args->dim;

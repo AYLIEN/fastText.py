@@ -38,11 +38,9 @@ class FastTextModel {
         int lrUpdateRate;
         double t;
 
-        std::vector<std::string> getWords();
         std::vector<std::vector<std::string>> classifierPredictProb(std::string text,
                 int32_t k);
 
-        void addWord(std::string word);
         void setArgs(std::shared_ptr<Args> args);
         void setDictionary(std::shared_ptr<Dictionary> dict);
         void setMatrix(std::shared_ptr<Matrix> input,

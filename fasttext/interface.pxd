@@ -7,8 +7,6 @@ from libcpp.memory cimport shared_ptr
 cdef extern from "interface.h":
     cdef cppclass FastTextModel:
         FastTextModel()
-        string modelName
-
         vector[vector[string]] classifierPredictProb(string text, int32_t k)
 
         # Wrapper for Dictionary class

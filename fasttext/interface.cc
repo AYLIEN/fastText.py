@@ -27,24 +27,6 @@ void FastTextModel::setArgs(std::shared_ptr<Args> args)
     minCount = args->minCount;
     neg = args->neg;
     wordNgrams = args->wordNgrams;
-    if(args->loss == loss_name::ns) {
-        lossName = "ns";
-    }
-    if(args->loss == loss_name::hs) {
-        lossName = "hs";
-    }
-    if(args->loss == loss_name::softmax) {
-        lossName = "softmax";
-    }
-    if(args->model == model_name::cbow) {
-        modelName = "cbow";
-    }
-    if(args->model == model_name::sg) {
-        modelName = "skipgram";
-    }
-    if(args->model == model_name::sup) {
-        modelName = "supervised";
-    }
     bucket = args->bucket;
     minn = args->minn;
     maxn = args->maxn;

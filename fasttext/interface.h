@@ -30,7 +30,6 @@ class FastTextModel {
         int neg;
         int wordNgrams;
         std::string lossName;
-        std::string modelName;
         int bucket;
         int minn;
         int maxn;

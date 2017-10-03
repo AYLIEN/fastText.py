@@ -38,21 +38,6 @@ cdef class FastTextModelWrapper:
         cpp_string = self.fm.dictGetLabel(i)
         return cpp_string.decode(encoding)
 
-    def get_vector(self, word, encoding):
-        word_bytes = bytes(word, encoding)
-        return self.fm.getVectorWrapper(word_bytes)
-
-    def classifier_predict(self, text, k, label_prefix, encoding):
-        cdef vector[string] raw_labels
-        text_bytes = bytes(text, encoding)
-        labels = []
-        raw_labels = self.fm.classifierPredict(text_bytes, k)
-        for raw_label in raw_labels:
-            label = raw_label.decode(encoding)
-            label = label.replace(label_prefix, '')
-            labels.append(label)
-        return labels
-
     def classifier_predict_prob(self, text, k, label_prefix, encoding):
         cdef vector[vector[string]] raw_results
         cdef string cpp_str

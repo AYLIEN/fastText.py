@@ -38,9 +38,6 @@ cdef extern from "interface.h":
         int lrUpdateRate
         double t
 
-        vector[string] getWords()
-        vector[real] getVectorWrapper(string word)
-        vector[string] classifierPredict(string text, int32_t k)
         vector[vector[string]] classifierPredictProb(string text, int32_t k)
 
         # Wrapper for Dictionary class

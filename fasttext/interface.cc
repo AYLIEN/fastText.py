@@ -103,64 +103,6 @@ std::string FastTextModel::dictGetLabel(int32_t i)
     return _dict->getLabel(i);
 }
 
-/* We use the same logic as FastText::getVector here; Because
- * we need to access our own dictionary and input matrix */
-std::vector<real> FastTextModel::getVectorWrapper(std::string word)
-{
-    Vector vec(dim);
-    const std::vector<int32_t>& ngrams = _dict->getNgrams(word);
-    vec.zero();
-    for (auto it = ngrams.begin(); it != ngrams.end(); ++it) {
-        vec.addRow(*_input_matrix, *it);
-    }
-    if (ngrams.size() > 0) {
-        vec.mul(1.0 / ngrams.size());
-    }
-    std::vector<real> vector(vec.data_, vec.data_ + vec.m_);
-    return vector;
-}
-
-std::vector<std::string> FastTextModel::classifierPredict(std::string text,
-        int32_t k)
-{
-    /* Hardcoded here; since we need this variable but the variable
-     * is private in dictionary.h */
-    const int32_t max_line_size = 1024;
-
-    /* List of word ids */
-    std::vector<int32_t> text_word_ids;
-    std::istringstream iss(text);
-    std::string token;
-
-    /* We implement the same logic as Dictionary::getLine */
-    std::uniform_real_distribution<> uniform(0, 1);
-    while(_dict->readWord(iss, token)) {
-        int32_t word_id = _dict->getId(token);
-        if(word_id < 0) continue;
-        entry_type type = _dict->getType(word_id);
-        if (type == entry_type::word &&
-                !_dict->discard(word_id, uniform(_model->rng))) {
-            text_word_ids.push_back(word_id);
-        }
-        if(text_word_ids.size() > max_line_size) break;
-    }
-    _dict->addNgrams(text_word_ids, wordNgrams);
-
-    std::vector<std::string> labels;
-    if(text_word_ids.size() > 0) {
-        std::vector<std::pair<real, int32_t>> predictions;
-
-        _model->predict(text_word_ids, k, predictions);
-        for(auto it = predictions.cbegin(); it != predictions.cend(); it++) {
-            labels.push_back(_dict->getLabel(it->second));
-        }
-
-        return labels;
-    } else {
-        return labels;
-    }
-}
-
 std::vector<std::vector<std::string>>
     FastTextModel::classifierPredictProb(std::string text, int32_t k)
 {
@@ -207,14 +149,6 @@ std::vector<std::vector<std::string>>
     }
     return results;
 }
-
-template <class cT, class traits = std::char_traits<cT> >
-class basic_nullbuf: public std::basic_streambuf<cT, traits> {
-    typename traits::int_type overflow(typename traits::int_type c)
-    {
-        return traits::not_eof(c); // indicate success
-    }
-};
 
 /* The logic is the same as FastText::loadModel, we roll our own
  * to be able to access data from args, dictionary etc since this

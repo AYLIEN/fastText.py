@@ -73,11 +73,6 @@ def load_model(filename, label_prefix='', encoding='utf-8'):
 
     model_name = model.fm.modelName
     if model_name == 'supervised':
-        labels = []
-        for i in xrange(model.dict_nlabels()):
-            label = model.dict_get_label(i, encoding)
-            # Remove the prefix
-            labels.append(label.replace(label_prefix, ''))
-        return SupervisedModel(model, labels, label_prefix, encoding)
+        return SupervisedModel(model, label_prefix, encoding)
     else:
         raise ValueError('fastText: model name is not valid!')

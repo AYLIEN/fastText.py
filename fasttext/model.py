@@ -4,9 +4,8 @@ from numpy.linalg import norm
 
 # Class for classifier model
 class SupervisedModel(object):
-    def __init__(self, model, labels, label_prefix, encoding='utf-8'):
+    def __init__(self, model, label_prefix, encoding='utf-8'):
         self._model = model
-        self.labels = labels
         self.label_prefix = label_prefix
         self.encoding = encoding
 

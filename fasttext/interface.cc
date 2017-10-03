@@ -52,21 +52,6 @@ void FastTextModel::setModel(std::shared_ptr<Model> model)
     _model = model;
 }
 
-std::string FastTextModel::dictGetWord(int32_t i)
-{
-    return _dict->getWord(i);
-}
-
-int32_t FastTextModel::dictGetNLabels()
-{
-    return _dict->nlabels();
-}
-
-std::string FastTextModel::dictGetLabel(int32_t i)
-{
-    return _dict->getLabel(i);
-}
-
 std::vector<std::vector<std::string>>
     FastTextModel::classifierPredictProb(std::string text, int32_t k)
 {

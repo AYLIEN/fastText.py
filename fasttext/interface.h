@@ -45,12 +45,6 @@ class FastTextModel {
         void setMatrix(std::shared_ptr<Matrix> input,
                 std::shared_ptr<Matrix> output);
         void setModel(std::shared_ptr<Model> model);
-
-        /* wrapper for Dictionary class */
-        int32_t dictGetNWords();
-        std::string dictGetWord(int32_t i);
-        int32_t dictGetNLabels();
-        std::string dictGetLabel(int32_t i);
 };
 
 void loadModelWrapper(std::string filename, FastTextModel& model);

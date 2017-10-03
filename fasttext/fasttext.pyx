@@ -19,19 +19,6 @@ cdef class FastTextModelWrapper:
     def __cinit__(self):
         self.fm = FastTextModel()
 
-    def dict_get_word(self, i, encoding):
-        cdef string cpp_string
-        cpp_string = self.fm.dictGetWord(i)
-        return cpp_string.decode(encoding)
-
-    def dict_nlabels(self):
-        return self.fm.dictGetNLabels()
-
-    def dict_get_label(self, i, encoding):
-        cdef string cpp_string
-        cpp_string = self.fm.dictGetLabel(i)
-        return cpp_string.decode(encoding)
-
     def classifier_predict_prob(self, text, k, label_prefix, encoding):
         cdef vector[vector[string]] raw_results
         cdef string cpp_str

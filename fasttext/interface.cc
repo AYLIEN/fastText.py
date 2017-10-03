@@ -19,6 +19,8 @@
 
 FastTextModel::FastTextModel(){}
 
+bool quant_ = false;
+
 void FastTextModel::setArgs(std::shared_ptr<Args> args)
 {
     dim = args->dim;
@@ -57,45 +59,50 @@ std::vector<std::vector<std::string>>
 {
     /* Hardcoded here; since we need this variable but the variable
      * is private in dictionary.h */
-    const int32_t max_line_size = 1024;
-
-    /* List of word ids */
-    std::vector<int32_t> text_word_ids;
-    std::istringstream iss(text);
-    std::string token;
-
-    /* We implement the same logic as Dictionary::getLine */
-    std::uniform_real_distribution<> uniform(0, 1);
-    while(_dict->readWord(iss, token)) {
-        int32_t word_id = _dict->getId(token);
-        if(word_id < 0) continue;
-        entry_type type = _dict->getType(word_id);
-        if (type == entry_type::word &&
-                !_dict->discard(word_id, uniform(_model->rng))) {
-            text_word_ids.push_back(word_id);
-        }
-        if(text_word_ids.size() > max_line_size) break;
-    }
-    _dict->addNgrams(text_word_ids, wordNgrams);
-
+//    const int32_t max_line_size = 1024;
+//
+//    /* List of word ids */
+//    std::vector<int32_t> text_word_ids;
+//    std::istringstream iss(text);
+//    std::string token;
+//
+//    /* We implement the same logic as Dictionary::getLine */
+//    std::uniform_real_distribution<> uniform(0, 1);
+//    while(_dict->readWord(iss, token)) {
+//        int32_t word_id = _dict->getId(token);
+//        if(word_id < 0) continue;
+//        entry_type type = _dict->getType(word_id);
+//        if (type == entry_type::word &&
+//                !_dict->discard(word_id, uniform(_model->rng))) {
+//            text_word_ids.push_back(word_id);
+//        }
+//        if(text_word_ids.size() > max_line_size) break;
+//    }
+//    _dict->addNgrams(text_word_ids, wordNgrams);
+//
+//    std::vector<std::vector<std::string>> results;
+//    if(text_word_ids.size() > 0) {
+//        std::vector<std::pair<real, int32_t>> predictions;
+//
+//        _model->predict(text_word_ids, k, predictions);
+//        for(auto it = predictions.cbegin(); it != predictions.cend(); it++) {
+//            std::vector<std::string> result;
+//            result.push_back(_dict->getLabel(it->second));
+//
+//            /* We use string stream here instead of to_string, to make sure
+//             * that the string is consistent with std::cout from fasttext(1) */
+//            std::ostringstream probability_stream;
+//            probability_stream << exp(it->first);
+//            result.push_back(probability_stream.str());
+//
+//            results.push_back(result);
+//        }
+//    }
     std::vector<std::vector<std::string>> results;
-    if(text_word_ids.size() > 0) {
-        std::vector<std::pair<real, int32_t>> predictions;
-
-        _model->predict(text_word_ids, k, predictions);
-        for(auto it = predictions.cbegin(); it != predictions.cend(); it++) {
-            std::vector<std::string> result;
-            result.push_back(_dict->getLabel(it->second));
-
-            /* We use string stream here instead of to_string, to make sure
-             * that the string is consistent with std::cout from fasttext(1) */
-            std::ostringstream probability_stream;
-            probability_stream << exp(it->first);
-            result.push_back(probability_stream.str());
-
-            results.push_back(result);
-        }
-    }
+    std::vector<std::string> result;
+    std::string s("Initial string");
+    result.push_back(s);
+    results.push_back(result);
     return results;
 }
 
@@ -112,17 +119,34 @@ void loadModelWrapper(std::string filename, FastTextModel& model)
     }
     std::shared_ptr<Args> args = std::make_shared<Args>();
     std::shared_ptr<Dictionary> dict = std::make_shared<Dictionary>(args);
-    std::shared_ptr<Matrix> input_matrix = std::make_shared<Matrix>();
-    std::shared_ptr<Matrix> output_matrix = std::make_shared<Matrix>();
-    std::shared_ptr<QMatrix> qinput_ = std::make_shared<QMatrix>();
-    std::shared_ptr<QMatrix> qoutput_ = std::make_shared<QMatrix>();
+    std::shared_ptr<Matrix> input = std::make_shared<Matrix>();
+    std::shared_ptr<Matrix> output = std::make_shared<Matrix>();
+    std::shared_ptr<QMatrix> qinput = std::make_shared<QMatrix>();
+    std::shared_ptr<QMatrix> qoutput = std::make_shared<QMatrix>();
 
     args->load(ifs);
     dict->load(ifs);
-    input_matrix->load(ifs);
-    output_matrix->load(ifs);
-    std::shared_ptr<Model> model_p = std::make_shared<Model>(input_matrix,
-            output_matrix, args, 0);
+
+    bool quant_input;
+    ifs.read((char*) &quant_input, sizeof(bool));
+    if (quant_input) {
+      quant_ = true;
+      qinput->load(ifs);
+    } else {
+      input->load(ifs);
+    }
+
+    ifs.read((char*) &args->qout, sizeof(bool));
+    if (quant_ && args->qout) {
+        qoutput->load(ifs);
+    } else {
+        output->load(ifs);
+    }
+
+    std::shared_ptr<Model> model_p = std::make_shared<Model>(input, output, args, 0);
+    model_p->quant_ = quant_;
+    model_p->setQuantizePointer(qinput, qoutput, args->qout);
+
     if (args->model == model_name::sup) {
         model_p->setTargetCounts(dict->getCounts(entry_type::label));
     } else {
@@ -133,6 +157,6 @@ void loadModelWrapper(std::string filename, FastTextModel& model)
     /* save all data to FastTextModel */
     model.setArgs(args);
     model.setDictionary(dict);
-    model.setMatrix(input_matrix, output_matrix);
+    model.setMatrix(input, output);
     model.setModel(model_p);
 }

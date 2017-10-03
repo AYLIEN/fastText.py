@@ -9,12 +9,6 @@ cdef extern from "interface.h":
         FastTextModel()
         vector[vector[string]] classifierPredictProb(string text, int32_t k)
 
-        # Wrapper for Dictionary class
-        int32_t dictGetNWords()
-        string dictGetWord(int32_t i)
-        int32_t dictGetNLabels()
-        string dictGetLabel(int32_t i)
-
     # Add 'except +' to the function declaration to let Cython safely raise an
     # appropriate Python exception instead
     void loadModelWrapper(string filename, FastTextModel& model) except +

@@ -111,7 +111,13 @@ std::vector<std::vector<std::string>>
  * data is private in FastText class */
 void loadModelWrapper(std::string filename, FastTextModel& model)
 {
-    std::ifstream ifs(filename, std::ios_base::in | std::ios_base::binary);
+    std::ifstream ifs(filename, std::ifstream::binary);
+
+    int32_t magic;
+    int32_t version;
+    ifs.read((char*)&(magic), sizeof(int32_t));
+    ifs.read((char*)&(version), sizeof(int32_t));
+
     if (!ifs.is_open()) {
         std::cerr << "interface.cc: cannot load model file ";
         std::cerr << filename << std::endl;

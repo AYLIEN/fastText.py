@@ -114,6 +114,9 @@ void loadModelWrapper(std::string filename, FastTextModel& model)
     std::shared_ptr<Dictionary> dict = std::make_shared<Dictionary>(args);
     std::shared_ptr<Matrix> input_matrix = std::make_shared<Matrix>();
     std::shared_ptr<Matrix> output_matrix = std::make_shared<Matrix>();
+    std::shared_ptr<QMatrix> qinput_ = std::make_shared<QMatrix>();
+    std::shared_ptr<QMatrix> qoutput_ = std::make_shared<QMatrix>();
+
     args->load(ifs);
     dict->load(ifs);
     input_matrix->load(ifs);

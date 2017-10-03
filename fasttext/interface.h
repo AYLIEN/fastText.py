@@ -10,6 +10,7 @@
 #include "cpp/src/dictionary.h"
 #include "cpp/src/matrix.h"
 #include "cpp/src/model.h"
+#include "cpp/src_new/qmatrix.h"
 
 using namespace fasttext;
 

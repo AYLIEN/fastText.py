@@ -55,10 +55,6 @@ class Dictionary {
 
     int64_t pruneidx_size_;
     std::unordered_map<int32_t, int32_t> pruneidx_;
-    void addWordNgrams(
-        std::vector<int32_t>& line,
-        const std::vector<int32_t>& hashes,
-        int32_t n) const;
 
 
    public:
@@ -101,6 +97,10 @@ class Dictionary {
                     std::vector<int32_t>&, std::minstd_rand&) const;
     void threshold(int64_t, int64_t);
     void prune(std::vector<int32_t>&);
+    void addWordNgrams(
+    std::vector<int32_t>& line,
+    const std::vector<int32_t>& hashes,
+    int32_t n) const;
 };
 
 }

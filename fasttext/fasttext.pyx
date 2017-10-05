@@ -61,7 +61,7 @@ def load_model(filename, label_prefix='', encoding='utf-8'):
 # Wrapper for train(int argc, char *argv) C++ function in cpp/src/fasttext.cc
 def train_wrapper(model_name, input_file, output, label_prefix, lr, dim, ws,
         epoch, min_count, neg, word_ngrams, loss, bucket, minn, maxn, thread,
-        lr_update_rate, t, pretrained_vectors, silent=1, encoding='utf-8'):
+        lr_update_rate, t, pretrained_vectors, f, silent=1, encoding='utf-8'):
 
     # Check if the input_file is valid
     if not os.path.isfile(input_file):
@@ -102,7 +102,7 @@ def train_wrapper(model_name, input_file, output, label_prefix, lr, dim, ws,
         c_argv[i] = arg
 
     # Run the train wrapper
-    trainWrapper(c_argc, c_argv, silent)
+    trainWrapper(c_argc, c_argv, silent, <void*> f)
 
     # Load the model
     output_bin = output + '.bin'
@@ -122,3 +122,4 @@ def supervised(input_file, output, label_prefix='__label__', lr=0.1, dim=100,
     return train_wrapper('supervised', input_file, output, label_prefix, lr,
             dim, ws, epoch, min_count, neg, word_ngrams, loss, bucket, minn,
             maxn, thread, lr_update_rate, t, pretrained_vectors, silent, encoding)
+

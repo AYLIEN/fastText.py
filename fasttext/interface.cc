@@ -119,9 +119,11 @@ class basic_nullbuf: public std::basic_streambuf<cT, traits> {
     }
 };
 
-void trainWrapper(int argc, char **argv, int silent)
+void trainWrapper(int argc, char **argv, int silent, callbackfunc callback_run, void* callback)
 {
     /* if silent > 0, the log from train() function will be supressed */
+
+//    callback_run(99.0, callback);
 
     std::vector<std::string> args(argv, argv + argc);
 
@@ -132,6 +134,7 @@ void trainWrapper(int argc, char **argv, int silent)
         std::cout.rdbuf(null_ofs);
         std::shared_ptr<Args> a = std::make_shared<Args>();
         a->parseArgs(args);
+        a->setCallBack(callback_run, callback);
         FastText fasttext;
         fasttext.train(a);
         std::cout.rdbuf(old_ofs);

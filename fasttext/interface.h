@@ -48,6 +48,7 @@ class FastTextModel {
         void setModel(std::shared_ptr<Model> model);
 };
 
+void trainWrapper(int argc, char **argv, int silent);
 void loadModelWrapper(std::string filename, FastTextModel& model);
 
 #endif

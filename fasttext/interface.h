@@ -47,8 +47,8 @@ class FastTextModel {
                 std::shared_ptr<Matrix> output);
         void setModel(std::shared_ptr<Model> model);
 };
-
-void trainWrapper(int argc, char **argv, int silent, void* f);
+typedef void (*callbackfunc)(int progress, void *user_data);
+void trainWrapper(int argc, char **argv, int silent, callbackfunc callback_run, void* callback);
 void loadModelWrapper(std::string filename, FastTextModel& model);
 
 #endif

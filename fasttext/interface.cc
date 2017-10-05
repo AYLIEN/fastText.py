@@ -119,9 +119,11 @@ class basic_nullbuf: public std::basic_streambuf<cT, traits> {
     }
 };
 
-void trainWrapper(int argc, char **argv, int silent)
+void trainWrapper(int argc, char **argv, int silent, callbackfunc callback_run, void* callback)
 {
     /* if silent > 0, the log from train() function will be supressed */
+
+    callback_run(897, callback);
 
     std::vector<std::string> args(argv, argv + argc);
 

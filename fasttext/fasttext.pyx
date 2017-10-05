@@ -2,6 +2,7 @@
 from interface cimport trainWrapper
 from interface cimport loadModelWrapper
 from interface cimport FastTextModel
+from interface cimport callbackfunc
 
 # Python/C++ standart libraries
 from libc.stdlib cimport malloc, free
@@ -61,7 +62,7 @@ def load_model(filename, label_prefix='', encoding='utf-8'):
 # Wrapper for train(int argc, char *argv) C++ function in cpp/src/fasttext.cc
 def train_wrapper(model_name, input_file, output, label_prefix, lr, dim, ws,
         epoch, min_count, neg, word_ngrams, loss, bucket, minn, maxn, thread,
-        lr_update_rate, t, pretrained_vectors, f, silent=1, encoding='utf-8'):
+        lr_update_rate, t, pretrained_vectors, callback, silent=1, encoding='utf-8'):
 
     # Check if the input_file is valid
     if not os.path.isfile(input_file):
@@ -102,7 +103,7 @@ def train_wrapper(model_name, input_file, output, label_prefix, lr, dim, ws,
         c_argv[i] = arg
 
     # Run the train wrapper
-    trainWrapper(c_argc, c_argv, silent, <void*> f)
+    trainWrapper(c_argc, c_argv, silent, callback_run, <void*> callback)
 
     # Load the model
     output_bin = output + '.bin'
@@ -115,11 +116,13 @@ def train_wrapper(model_name, input_file, output, label_prefix, lr, dim, ws,
     return model
 
 # Train classifier
-def supervised(input_file, output, label_prefix='__label__', lr=0.1, dim=100,
+def supervised(input_file, output, callback, label_prefix='__label__', lr=0.1, dim=100,
         ws=5, epoch=5, min_count=1, neg=5, word_ngrams=1, loss='softmax',
         bucket=0, minn=0, maxn=0, thread=12, lr_update_rate=100,
         t=1e-4, pretrained_vectors='', silent=1, encoding='utf-8'):
     return train_wrapper('supervised', input_file, output, label_prefix, lr,
             dim, ws, epoch, min_count, neg, word_ngrams, loss, bucket, minn,
-            maxn, thread, lr_update_rate, t, pretrained_vectors, silent, encoding)
+            maxn, thread, lr_update_rate, t, pretrained_vectors, callback, silent, encoding)
 
+cdef void callback_run(int progress, void *f):
+    (<object>f)(progress)

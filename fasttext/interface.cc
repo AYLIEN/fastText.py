@@ -111,6 +111,40 @@ std::vector<std::vector<std::string>>
     return results;
 }
 
+template <class cT, class traits = std::char_traits<cT> >
+class basic_nullbuf: public std::basic_streambuf<cT, traits> {
+    typename traits::int_type overflow(typename traits::int_type c)
+    {
+        return traits::not_eof(c); // indicate success
+    }
+};
+
+void trainWrapper(int argc, char **argv, int silent)
+{
+    /* if silent > 0, the log from train() function will be supressed */
+
+    std::vector<std::string> args(argv, argv + argc);
+
+    if(silent > 0) {
+        /* output file stream to redirect output from fastText library */
+        std::streambuf* old_ofs = std::cout.rdbuf();
+        std::streambuf* null_ofs = new basic_nullbuf<char>();
+        std::cout.rdbuf(null_ofs);
+        std::shared_ptr<Args> a = std::make_shared<Args>();
+        a->parseArgs(args);
+        FastText fasttext;
+        fasttext.train(a);
+        std::cout.rdbuf(old_ofs);
+        delete null_ofs;
+    } else {
+        std::shared_ptr<Args> a = std::make_shared<Args>();
+        a->parseArgs(args);
+        FastText fasttext;
+        fasttext.train(a);
+    }
+}
+
+
 /* The logic is the same as FastText::loadModel, we roll our own
  * to be able to access data from args, dictionary etc since this
  * data is private in FastText class */

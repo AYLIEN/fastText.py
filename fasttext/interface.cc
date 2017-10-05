@@ -123,7 +123,7 @@ void trainWrapper(int argc, char **argv, int silent, callbackfunc callback_run, 
 {
     /* if silent > 0, the log from train() function will be supressed */
 
-    callback_run(897, callback);
+//    callback_run(99.0, callback);
 
     std::vector<std::string> args(argv, argv + argc);
 

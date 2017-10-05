@@ -124,5 +124,5 @@ def supervised(input_file, output, callback, label_prefix='__label__', lr=0.1, d
             dim, ws, epoch, min_count, neg, word_ngrams, loss, bucket, minn,
             maxn, thread, lr_update_rate, t, pretrained_vectors, callback, silent, encoding)
 
-cdef void callback_run(int progress, void *f):
+cdef void callback_run(double progress, void *f):
     (<object>f)(progress)

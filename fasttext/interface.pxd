@@ -9,6 +9,8 @@ cdef extern from "interface.h":
         FastTextModel()
         vector[vector[string]] classifierPredictProb(string text, int32_t k)
 
+    void trainWrapper(int argc, char **argvm, int silent)
+
     # Add 'except +' to the function declaration to let Cython safely raise an
     # appropriate Python exception instead
     void loadModelWrapper(string filename, FastTextModel& model) except +

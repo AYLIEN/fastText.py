@@ -1,5 +1,4 @@
 from .fasttext import load_model
-
-import os
+from .fasttext import supervised
 
 __VERSION__ = '0.8.3'

@@ -56,6 +56,11 @@ std::string Args::lossToString(loss_name ln) {
   return "Unknown loss!"; // should never happen
 }
 
+void Args::setCallBack(callbackfunc callback_run, void* callback) {
+    _callback_run = callback_run;
+    _callback = callback;
+}
+
 void Args::parseArgs(const std::vector<std::string>& args) {
   std::string command(args[1]);
   if (command == "supervised") {

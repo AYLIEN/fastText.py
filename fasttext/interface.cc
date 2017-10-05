@@ -134,6 +134,7 @@ void trainWrapper(int argc, char **argv, int silent, callbackfunc callback_run, 
         std::cout.rdbuf(null_ofs);
         std::shared_ptr<Args> a = std::make_shared<Args>();
         a->parseArgs(args);
+        a->setCallBack(callback_run, callback);
         FastText fasttext;
         fasttext.train(a);
         std::cout.rdbuf(old_ofs);

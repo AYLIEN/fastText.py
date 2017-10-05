@@ -20,6 +20,9 @@ namespace fasttext {
 enum class model_name : int {cbow=1, sg, sup};
 enum class loss_name : int {hs=1, ns, softmax};
 
+typedef void (*callbackfunc)(double progress, void *user_data);
+
+
 class Args {
   private:
     std::string lossToString(loss_name);
@@ -64,6 +67,11 @@ class Args {
     void printQuantizationHelp();
     void save(std::ostream&);
     void load(std::istream&);
+
+    void setCallBack(callbackfunc callback_run, void* callback);
+    callbackfunc _callback_run;
+    void* _callback;
+
 };
 
 }

@@ -187,6 +187,10 @@ void FastText::loadModel(std::istream& in) {
   }
 }
 
+void FastText::report_progress(real progress){
+    args_->_callback_run(100 * progress, args_->_callback);
+}
+
 void FastText::printInfo(real progress, real loss) {
   real t = real(clock() - start) / CLOCKS_PER_SEC;
   real wst = real(tokenCount) / t;
@@ -195,7 +199,9 @@ void FastText::printInfo(real progress, real loss) {
   int etah = eta / 3600;
   int etam = (eta - etah * 3600) / 60;
 
-  args_->_callback_run(100 * progress, args_->_callback);
+//  args_->_callback_run(100 * progress, args_->_callback);
+
+  std::thread(&FastText::report_progress, this, progress).detach();
 
 //  std::cerr << std::fixed;
 //  std::cerr << "\rProgress: " << std::setprecision(1) << 100 * progress << "%";

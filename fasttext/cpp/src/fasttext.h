@@ -90,6 +90,7 @@ class FastText {
 
     void loadVectors(std::string);
     int getDimension() const;
+    void report_progress(real);
 };
 
 }

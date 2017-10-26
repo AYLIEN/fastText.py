@@ -21,13 +21,13 @@ cdef class FastTextModelWrapper:
     def __cinit__(self):
         self.fm = FastTextModel()
 
-    def classifier_predict_prob(self, text, k, label_prefix, encoding):
+    def classifier_predict_prob(self, text, label_prefix, encoding):
         cdef vector[vector[string]] raw_results
         cdef string cpp_str
         text_bytes = bytes(text, encoding)
         labels = []
         probabilities = []
-        raw_results = self.fm.classifierPredictProb(text_bytes, k)
+        raw_results = self.fm.classifierPredictProb(text_bytes)
         for result in raw_results:
             cpp_str = result[0]
             label = cpp_str.decode(encoding)

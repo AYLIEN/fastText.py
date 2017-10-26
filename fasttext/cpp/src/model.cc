@@ -34,6 +34,10 @@ Model::Model(std::shared_ptr<Matrix> wi,
   initLog();
 }
 
+int32_t Model::getNumClasses() {
+    return osz_;
+}
+
 Model::~Model() {
   delete[] t_sigmoid;
   delete[] t_log;
@@ -148,7 +152,6 @@ void Model::predict(const std::vector<int32_t>& input, int32_t k,
   } else {
     findKBest(k, heap, hidden, output);
   }
-  std::sort_heap(heap.begin(), heap.end(), comparePairs);
 }
 
 void Model::predict(const std::vector<int32_t>& input, int32_t k,
@@ -160,15 +163,7 @@ void Model::findKBest(int32_t k, std::vector<std::pair<real, int32_t>>& heap,
                       Vector& hidden, Vector& output) const {
   computeOutputSoftmax(hidden, output);
   for (int32_t i = 0; i < osz_; i++) {
-    if (heap.size() == k && log(output[i]) < heap.front().first) {
-      continue;
-    }
     heap.push_back(std::make_pair(log(output[i]), i));
-    std::push_heap(heap.begin(), heap.end(), comparePairs);
-    if (heap.size() > k) {
-      std::pop_heap(heap.begin(), heap.end(), comparePairs);
-      heap.pop_back();
-    }
   }
 }
 

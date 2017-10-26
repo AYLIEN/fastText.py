@@ -38,8 +38,7 @@ class FastTextModel {
         int lrUpdateRate;
         double t;
 
-        std::vector<std::vector<std::string>> classifierPredictProb(std::string text,
-                int32_t k);
+        std::vector<std::vector<std::string>> classifierPredictProb(std::string text);
 
         void setArgs(std::shared_ptr<Args> args);
         void setDictionary(std::shared_ptr<Dictionary> dict);

@@ -55,12 +55,12 @@ void FastTextModel::setModel(std::shared_ptr<Model> model)
 }
 
 std::vector<std::vector<std::string>>
-    FastTextModel::classifierPredictProb(std::string text, int32_t k)
+    FastTextModel::classifierPredictProb(std::string text)
 {
     /* Hardcoded here; since we need this variable but the variable
      * is private in dictionary.h */
     const int32_t max_line_size = 1024;
-
+    int32_t k = _model->getNumClasses();
     /* List of word ids */
     std::vector<int32_t> text_word_ids;
     std::vector<int32_t> word_hashes;

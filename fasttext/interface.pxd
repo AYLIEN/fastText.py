@@ -7,7 +7,7 @@ from libcpp.memory cimport shared_ptr
 cdef extern from "interface.h":
     cdef cppclass FastTextModel:
         FastTextModel()
-        vector[vector[string]] classifierPredictProb(string text, int32_t k)
+        vector[vector[string]] classifierPredictProb(string text)
 
     ctypedef void (*callbackfunc)(double progress, void *user_data)
     void trainWrapper(int argc, char **argvm, int silent, callbackfunc callback, void* f)

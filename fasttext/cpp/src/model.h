@@ -77,6 +77,8 @@ class Model {
     real negativeSampling(int32_t, real);
     real hierarchicalSoftmax(int32_t, real);
     real softmax(int32_t, real);
+    int32_t getNumClasses();
+
 
     void predict(const std::vector<int32_t>&, int32_t,
                  std::vector<std::pair<real, int32_t>>&,

@@ -9,14 +9,13 @@ class SupervisedModel(object):
         self.label_prefix = label_prefix
         self.encoding = encoding
 
-    def predict_proba(self, texts, k=1):
+    def predict_proba(self, texts):
         results = []
         for text in texts:
             if text[-1] != '\n':
                 text += '\n'
             result = self._model.classifier_predict_prob(
                 text,
-                k,
                 self.label_prefix,
                 self.encoding
             )

@@ -118,7 +118,7 @@ def train_wrapper(model_name, input_file, output, label_prefix, lr, dim, ws,
 # Train classifier
 def supervised(input_file, output, callback, label_prefix='__label__', lr=0.1, dim=100,
         ws=5, epoch=5, min_count=1, neg=5, word_ngrams=1, loss='softmax',
-        bucket=0, minn=0, maxn=0, thread=12, lr_update_rate=100,
+        bucket=2000000, minn=0, maxn=0, thread=12, lr_update_rate=100,
         t=1e-4, pretrained_vectors='', silent=1, encoding='utf-8'):
     return train_wrapper('supervised', input_file, output, label_prefix, lr,
             dim, ws, epoch, min_count, neg, word_ngrams, loss, bucket, minn,

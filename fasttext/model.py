@@ -12,7 +12,9 @@ class SupervisedModel(object):
     def predict_proba(self, texts):
         results = []
         for text in texts:
-            if text[-1] != '\n':
+            if not text:
+                text = '\n'
+            elif text[-1] != '\n':
                 text += '\n'
             result = self._model.classifier_predict_prob(
                 text,
